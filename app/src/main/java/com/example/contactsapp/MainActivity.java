@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     Button addButton;
     Button getYearButton;
     Button getWriterButton;
+    Button removeButton;
     DatabaseControl control;
     TextView resultView;
     RecyclerView recyclerView;
@@ -33,25 +34,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         control = new DatabaseControl(this);
-        control.open();
-        if(control.getTitles().length>0) {
-            adapter = new CustomAdapter(control.getTitles());
-        }
-        control.close();
 
         titleEdit = findViewById(R.id.titleEdit);
         writerEdit = findViewById(R.id.writerEdit);
         spinner = findViewById(R.id.spinner);
         addButton = findViewById(R.id.addButton);
+        removeButton = findViewById(R.id.removeButton);
         getYearButton = findViewById(R.id.getYearButton);
         getWriterButton = findViewById(R.id.getWriterButton);
         resultView = findViewById(R.id.resultView);
         recyclerView = findViewById(R.id.rView);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Added "+title+" "+year+" "+writer, Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(getApplicationContext(), "FAILED "+title+" "+year+" "+writer, Toast.LENGTH_SHORT).show();
+
+                onResume();
+            }
+        });
+
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String title = titleEdit.getText().toString();
+                control.open();
+                control.delete(title);
+                control.close();
+                onResume();
             }
         });
 
@@ -87,8 +92,37 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 control.open();
                 resultView.setText((control.getWriter(titleEdit.getText().toString())));
+                control.close();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        control.open();
+        if(control.getTitles().length>0) {
+            adapter = new CustomAdapter(control.getTitles());
+        }
+        control.close();
+
+        if(!(adapter == null)) {
+            adapter.setListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //String name = ((TextView) view).getText().toString();
+                    control.open();
+                    Toast.makeText(getApplicationContext(), "Start Year: "+control.getYear(((TextView) view).getText().toString()), Toast.LENGTH_SHORT).show();
+                    control.close();
+                }
+            });
+        }
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
     }
 }
 

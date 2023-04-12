@@ -32,7 +32,11 @@ public class DatabaseControl {
         values.put("title", title);
         values.put("year", year);
         values.put("writer", writer);
-        return database.insert("contact", null, values) > 0;
+        return database.insert("manga", null, values) > 0;
+    }
+
+    public void delete(String title){
+        database.delete("manga", "title=\""+title+"\"", null);
     }
 
     //retrieves year from database
