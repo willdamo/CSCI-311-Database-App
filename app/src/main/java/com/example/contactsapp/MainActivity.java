@@ -1,6 +1,9 @@
 package com.example.contactsapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     Button addButton;
     Button getButton;
     DatabaseControl control;
+    TextView resultView;
+    RecyclerView recyclerView;
+    CustomAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +31,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         control = new DatabaseControl(this);
+        control.open();
+        if(control.getNames().length>0) {
+            adapter = new CustomAdapter(control.getNames());
+        }
+        control.close();
 
         nameEdit = findViewById(R.id.nameEdit);
         spinner = findViewById(R.id.spinner);
         addButton = findViewById(R.id.addButton);
         getButton = findViewById(R.id.getButton);
+        resultView = findViewById(R.id.resultView);
+        recyclerView = findViewById(R.id.rView);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 R.array.states, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        getButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                control.open();
+                resultView.setText(control.getState(nameEdit.getText().toString()));
+                control.close();
+            }
+        });
     }
 }
 
