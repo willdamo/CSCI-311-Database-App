@@ -26,26 +26,38 @@ public class DatabaseControl {
     }
 
     //adds data to the database
-    public boolean insert(String name, String state) {
+    public boolean insert(String title, String year, String writer) {
         //stores information for database
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("state", state);
+        values.put("title", title);
+        values.put("year", year);
+        values.put("writer", writer);
         return database.insert("contact", null, values) > 0;
     }
 
-    //retrieves info from database
-    public String getState(String name) {
-        String query = "select state from contact where name=\""+name+"\"";
+    //retrieves year from database
+    public String getYear(String title) {
+        String query = "select year from manga where title=\""+title+"\"";
         Cursor cursor = database.rawQuery(query, null);
         cursor.moveToFirst();
-        String state = cursor.getString(0);
+        String year = cursor.getString(0);
         cursor.close();
-        return state;
+        return year;
     }
 
-    public String[] getNames(){
-        String query = "select name from contact";
+    //retrieves writer from database
+    public String getWriter(String title){
+        String query = "select writer from manga where title=\""+title+"\"";
+        Cursor cursor = database.rawQuery(query, null);
+        cursor.moveToFirst();
+        String writer = cursor.getString(0);
+        cursor.close();
+        return writer;
+    }
+
+    //returns an array of titles from the database
+    public String[] getTitles(){
+        String query = "select title from manga";
         ArrayList<String> array = new ArrayList<String>();
         Cursor cursor = database.rawQuery(query, null);
         cursor.moveToFirst();
