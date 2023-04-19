@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Contacts App</string>
+    <string name="app_name">Manga Storage App</string>
     <string name="element_text">Element</string>
     <string-array name="years">
         <item>1950</item>

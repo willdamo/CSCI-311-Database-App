@@ -135,8 +135,9 @@
         android:id="@+id/textInputLayout"
         android:layout_width="266dp"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="144dp"
-        tools:layout_editor_absoluteY="329dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/writerEdit">
 
     </com.google.android.material.textfield.TextInputLayout>
 
