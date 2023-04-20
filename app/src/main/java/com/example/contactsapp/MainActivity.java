@@ -102,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         control.open();
-        if(control.getTitles().length>0) {
-            adapter = new CustomAdapter(control.getTitles());
-        }
+        adapter = new CustomAdapter(control.getTitles());
         control.close();
 
         if(!(adapter == null)) {
